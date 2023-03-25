@@ -1,0 +1,48 @@
+using System;
+using System.Web.Services.Description;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
+
+namespace Dataverse0Auth2FetchXML
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            string crmUrl = "https://xxxxxxx.crm6.dynamics.com";
+            string clientId = "xxxxxxxx-42c3-beb2-6fce3efb0669";
+            string secretKey = "xxxxxxxxxoIIcEf9MEICOXCncM4zLcSz"; 
+
+            try
+            {
+
+                CrmServiceClient dvc = new CrmServiceClient(new Uri(crmUrl), clientId, secretKey, false, "");
+
+                string fetchquery = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                                  <entity name='account'>
+                                    <attribute name='name' />
+                                    <attribute name='primarycontactid' />
+                                    <attribute name='telephone1' />
+                                    <attribute name='accountid' />
+                                    <order attribute='name' descending='false' />
+                                  </entity>
+                                </fetch>";
+
+                EntityCollection accounts = dvc.RetrieveMultiple(new FetchExpression(fetchquery));
+                foreach (var c in accounts.Entities)
+                {
+                    Console.WriteLine("Name: {0}", c.Attributes["name"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.ReadLine();
+        }
+
+    }
+}
