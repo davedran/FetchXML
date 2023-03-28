@@ -1,0 +1,21 @@
+SELECT TOP (10) T1.fullname, T1.emailaddress1, T2.contoso_buildsitename, T2.contoso_name, T3.contoso_requiresizename
+  FROM [dbo].[contact] T1
+  Inner join [dbo].contoso_permit T2
+  On T1.contactid = T2.contoso_contact
+  Inner Join [dbo].contoso_permittype T3
+  On T2.contoso_permittype = T3.contoso_permittypeID
+  
+  
+  <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+  <entity name="contact">
+    <attribute name="fullname" />
+    <attribute name="emailaddress1" />
+    <link-entity name="contoso_permit" from="contoso_contact" to="contactid">
+      <attribute name="contoso_buildsitename" />
+      <attribute name="contoso_name" />
+      <link-entity name="contoso_permittype" from="contoso_permittypeid" to="contoso_permittype">
+        <attribute name="contoso_requiresizename" />
+      </link-entity>
+    </link-entity>
+  </entity>
+</fetch>
